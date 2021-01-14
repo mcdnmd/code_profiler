@@ -5,19 +5,15 @@ import time
 import traceback
 
 FILENAME = os.path.abspath(__file__)
-FLAG = True
 
 
 def worker(code, globs, args):
-    global FLAG
     try:
         sys.argv = args
         exec(code, globs)
     except Exception as e:
         print(e)
-        FLAG = False
         raise
-    FLAG = False
 
 
 class Profiler:
@@ -53,7 +49,8 @@ class Profiler:
 
     def main_loop(self, profiling_thread_id):
         stack_search_time = 0
-        while FLAG:
+
+        while self.profile_object.is_alive():
             if self.interval - stack_search_time > 0:
                 time.sleep(self.interval - stack_search_time)
 
