@@ -1,5 +1,5 @@
-import os
 import csv
+import os
 
 from modules.Profiler import Profiler
 from modules.Statistics import ProgStatistics
@@ -53,8 +53,7 @@ class ProfilerCore:
             writer = csv.writer(file)
             writer.writerow(['func', 'amount_time', 'max', 'min', 'median'])
             for func, statistics in self.prog_statistics.funcs.items():
-                writer.writerow([func,
-                                 statistics.amount_worked_time,
+                writer.writerow([func, statistics.amount_worked_time,
                                  statistics.worked_time_max,
                                  statistics.worked_time_min,
                                  statistics.worked_time_median])

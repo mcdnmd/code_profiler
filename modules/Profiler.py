@@ -4,7 +4,6 @@ import threading
 import time
 import traceback
 
-
 FILENAME = os.path.abspath(__file__)
 FLAG = True
 
@@ -35,10 +34,8 @@ class Profiler:
                 self.args.append(a)
 
         self.profile_object = threading.Thread(target=worker,
-                                               args=[self.code,
-                                                     self.globs,
-                                                     self.args],
-                                               daemon=True)
+                                               args=[self.code, self.globs,
+                                                     self.args], daemon=True)
         self.stack_screens = []
         self.worked_time = 0
 
