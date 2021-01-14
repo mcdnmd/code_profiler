@@ -13,7 +13,7 @@ Version: 2.0
 * Тесты: `/tests`
 
 ### Управление
-`profiler.py [-h] [-w WORKDIR] [-s SORTBY] [-o OUTPUT] [-i INTERVAL] program argv [argv ...]`
+`profiler.py [-h] [-w WORKDIR] [-s SORTBY] [-o OUTPUT] [-i INTERVAL] [-a ARGV [ARGV ...]] program`
 
 Для работы утилита использует параметры:
 
@@ -24,7 +24,7 @@ Version: 2.0
 * `-o OUTPUT` указать файл сохранения статистики (файл должен быть без формата)
 * `-i INTERVAL` указать интервал копии стека (по умолчанию: 10 мс)
 * `program` имя файла профилирования
-* `-argv [argv ...]` указать аругументы [agrv..] запуска для указанного файла program (по умолчанию: None)
+* `-a ARGV [ARGC ...]` указать аругументы ARGV запуска для указанного файла program (по умолчанию: None)
 
 ### Пример использования фильтров
 `python3 profiler.py -w ./tests/ -o prog_prof hello.py`
