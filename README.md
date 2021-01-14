@@ -31,7 +31,7 @@ Version: 2.0
 
 В данном примере происходит профилирование `hello.py` из папки `../code_profiler/tests/`. Результат будет сохранен в файл `../code_profiler/tests/prog_prof.csv`
 
-`python3 profiler.py -w .\tests calculater.py  1 2 3 4`
+`python3 profiler.py -w .\tests calculater.py -a 1 2 3 4`
 
 В данном примере происходит профилирование `calculater.py`, запущенного с аргументами `1, 2, 3, 4`, из папки `../code_profiler/tests/`
 
