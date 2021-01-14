@@ -13,7 +13,7 @@ Version: 2.0
 * Тесты: `/tests`
 
 ### Управление
-`profiler.py [-h] [-w WORKDIR] [-s SORTBY] [-o OUTPUT] [-i INTERVAL] [-a ARGV [ARGV ...]] program`
+`profiler.py [-h] [-w WORKDIR] [-s SORTBY] [-o OUTPUT] [-i INTERVAL] program [-a ARGV [ARGV ...]]`
 
 Для работы утилита использует параметры:
 
