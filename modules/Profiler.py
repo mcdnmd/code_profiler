@@ -47,9 +47,8 @@ class Profiler:
         try:
             self.main_loop(profiling_thread_id)
         except KeyboardInterrupt:
-            print("LOL")
-            sys.exit()
-
+            self.worked_time = time.time() - self.worked_time
+            return
         self.worked_time = time.time() - self.worked_time
 
     def main_loop(self, profiling_thread_id):

@@ -50,11 +50,11 @@ def get_arg_parser():
                         action='store',
                         type=str,
                         help='name for program e.g. hello.py')
-    parser.add_argument('argv',
+    parser.add_argument('-a',
+                        dest='argv',
                         action='store',
                         nargs='+',
                         default=None,
-                        type=int,
                         help='program arguments')
     return parser
 
