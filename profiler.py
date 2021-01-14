@@ -4,31 +4,58 @@ import time
 import traceback
 import threading
 import argparse
-from modules.Profiler import Profiler
+from modules.Core import ProfilerCore
 
-PATH = os.path.dirname(__file__)
+PATH = os.path.dirname(os.path.abspath(__file__))
 
 
-def program_path(input_data):
+def workdir_path(input_data):
+    print(PATH, input_data)
     if input_data.startswith('.'):
-        path = PATH + os.path.dirname(input_data[1:])
-        return os.path.join(path, os.path.basename(input_data))
+        return PATH + input_data[1:]
     elif input_data.startswith('/'):
-        if os.path.isfile(input_data):
+        if os.path.isdir(input_data):
             return input_data
         else:
-            raise Exception("File not exists")
-    return os.path.join(PATH, input_data)
+            os.makedirs(input_data, exist_ok=True)
+    return input_data
 
 
 def get_arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('program_path', action='store', type=program_path,
-                        help='file/script path')
-    parser.add_argument('-a', action='store', dest='program_args', nargs='+',
-                        default=None, type=int,
-                        help='file`s/script`s arguments')
-
+    parser.add_argument('-w',
+                        dest='workdir',
+                        action='store',
+                        type=workdir_path,
+                        help='work directory path')
+    parser.add_argument('-s',
+                        dest='sortby',
+                        action='store',
+                        default=None,
+                        type=str,
+                        help='chose sort by parameter (default: time)')
+    parser.add_argument('-o',
+                        dest='output',
+                        action='store',
+                        default=None,
+                        type=str,
+                        help='chose file for output (default: ...)')
+    parser.add_argument('-i',
+                        dest='interval',
+                        action='store',
+                        default=10,
+                        type=int,
+                        help='chose interval in ms (default: 10ms)')
+    parser.add_argument('program',
+                        action='store',
+                        type=str,
+                        help='name for program e.g. hello.py')
+    parser.add_argument('argv',
+                        action='store',
+                        nargs='+',
+                        default=None,
+                        type=int,
+                        help='program arguments')
     return parser
 
 
@@ -36,11 +63,17 @@ def main():
     parser = get_arg_parser()
     args = parser.parse_args()
     if len(args.__dict__) > 0:
-        name = args.program_path
-        arguments = args.program_args
-        globs = {'__file__': args.program_path, '__name__': '__main__',
-                 '__package__': None, '__cached__': None, }
-        p = Profiler(globs, arguments)
+        progname = args.program
+        arguments = args.argv
+        workdir = args.workdir
+        sortby = args.sortby
+        output = args.output
+        interval = args.interval
+        globs = {'__file__': progname,
+                 '__name__': '__main__',
+                 '__package__': None,
+                 '__cached__': None, }
+        p = ProfilerCore(globs, arguments, workdir, sortby, output, interval)
         p.start()
     else:
         parser.print_usage()

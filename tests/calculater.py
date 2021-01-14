@@ -3,11 +3,11 @@ import time
 
 
 def add(x, y):
+    time.sleep(1)
     return x + y
 
 
 def add_array(array):
-    time.sleep(1)
     if len(array) > 1:
         result = add(int(array[0]), int(array[1]))
         for i in range(2, len(array)):
@@ -17,11 +17,11 @@ def add_array(array):
 
 
 def subtract(x, y):
+    time.sleep(1)
     return x - y
 
 
 def subtract_array(array):
-    time.sleep(1)
     if len(array) > 1:
         result = subtract(int(array[0]), int(array[1]))
         for i in range(2, len(array)):
@@ -31,11 +31,11 @@ def subtract_array(array):
 
 
 def multiply(x, y):
+    time.sleep(1)
     return x * y
 
 
 def multiply_array(array):
-    time.sleep(1)
     if len(array) > 1:
         result = multiply(int(array[0]), int(array[1]))
         for i in range(2, len(array)):
@@ -45,11 +45,11 @@ def multiply_array(array):
 
 
 def divide(x, y):
+    time.sleep(1)
     return x / y
 
 
 def divide_array(array):
-    time.sleep(1)
     if len(array) > 1:
         result = divide(int(array[0]), int(array[1]))
         for i in range(2, len(array)):

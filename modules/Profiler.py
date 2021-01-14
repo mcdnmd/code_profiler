@@ -1,12 +1,15 @@
+import os
 import sys
 import threading
 import time
 import traceback
 
+
+FILENAME = os.path.abspath(__file__)
 FLAG = True
 
 
-def run(code, globs, args):
+def worker(code, globs, args):
     global FLAG
     try:
         sys.argv = args
@@ -15,67 +18,64 @@ def run(code, globs, args):
         print(e)
         FLAG = False
         raise
-
     FLAG = False
 
 
-def calculate_time(work_time, stat):
-    calls = 0
-    for value in stat.values():
-        calls += value
-    if calls == 0:
-        return
-    time_per_call = work_time / calls
-
-    for key in stat.keys():
-        stat[key] *= time_per_call / work_time * 100
-
-    for key, value in stat.items():
-        print(f'func {key} worked {round(value, 2)}% of time')
-
-
 class Profiler:
-    def __init__(self, globs, args=None, interval=1/60,):
+    def __init__(self, globs, args, interval):
         self.globs = globs
-        self.interval = interval
+        self.interval = 1 / 1000 * interval
 
         with open(globs['__file__'], 'rb') as fp:
-            self.code = compile(fp.read(), 'executed_file', 'exec')
+            self.code = compile(fp.read(), globs['__file__'], 'exec')
 
         self.args = [globs['__file__']]
         if args is not None:
             for a in args:
                 self.args.append(a)
 
-        self.profile_object = threading.Thread(target=run,
+        self.profile_object = threading.Thread(target=worker,
                                                args=[self.code,
                                                      self.globs,
                                                      self.args],
                                                daemon=True)
-        self.stat = {}
+        self.stack_screens = []
+        self.worked_time = 0
 
     def start(self):
-        start_time = time.time()
+        self.worked_time = time.time()
         self.profile_object.start()
         profiling_thread_id = self.profile_object.ident
 
+        try:
+            self.main_loop(profiling_thread_id)
+        except KeyboardInterrupt:
+            print("LOL")
+            sys.exit()
+
+        self.worked_time = time.time() - self.worked_time
+
+    def main_loop(self, profiling_thread_id):
+        stack_search_time = 0
         while FLAG:
-            time.sleep(self.interval)
+            if self.interval - stack_search_time > 0:
+                time.sleep(self.interval - stack_search_time)
+
+            time_start = time.time()
+
             for thread_id, stack in sys._current_frames().items():
                 if thread_id == profiling_thread_id:
                     call_stack = []
+                    see_stack = False
                     for frame in traceback.extract_stack(stack):
                         filename = frame[0]
-                        name = frame[2]
-                        if filename == 'executed_file':
-                            call_stack.append(name)
+                        if filename == FILENAME:
+                            see_stack = True
+                            continue
+                        if see_stack:
+                            call_stack.append(frame)
 
                     if call_stack:
-                        last_call = call_stack.pop(len(call_stack) - 1)
-                        try:
-                            self.stat[last_call] += 1
-                        except KeyError:
-                            self.stat[last_call] = 0
+                        self.stack_screens.append(call_stack)
 
-        work_time = time.time() - start_time
-        calculate_time(work_time, self.stat)
+            stack_search_time = time.time() - time_start

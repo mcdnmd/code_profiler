@@ -1,12 +1,8 @@
 import time
 
 
-def sleep_for_5_sec():
-    time.sleep(5)
-
-
-def sleep_for_10_sec():
-    time.sleep(10)
+def sleep_for_4_sec():
+    time.sleep(4)
 
 
 def sleep_for_2_sec():
@@ -14,10 +10,16 @@ def sleep_for_2_sec():
 
 
 def main():
-    sleep_for_5_sec()
+    sleep_for_4_sec()
     sleep_for_2_sec()
-    sleep_for_10_sec()
+
+
+def new_func():
+    sleep_for_2_sec()
+    sleep_for_4_sec()
+    sleep_for_2_sec()
 
 
 if __name__ == '__main__':
     main()
+    new_func()
