@@ -21,7 +21,12 @@ class ProfilerCore:
     def start(self):
         self.Profiler = Profiler(self.globs, self.argv, self.interval)
         self.Profiler.start()
+
+        if self.output is not None:
+            self.save_raw_data(self.Profiler.raw_data)
+            return
         self.calculate_statistics()
+
         if self.output is not None:
             self.create_an_output()
 
@@ -57,3 +62,13 @@ class ProfilerCore:
                                  statistics.worked_time_max,
                                  statistics.worked_time_min,
                                  statistics.worked_time_median])
+
+    def save_raw_data(self, data):
+        filename = os.path.join(self.workdir, f'{self.output}.csv')
+        with open(filename, 'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                ['time_step', 'filename', 'lineno', 'function', 'called_order',
+                 'time_per_step'])
+            for func in data:
+                writer.writerow(func)

@@ -33,6 +33,7 @@ class Profiler:
                                                args=[self.code, self.globs,
                                                      self.args], daemon=True)
         self.stack_screens = []
+        self.raw_data = []
         self.worked_time = 0
 
     def start(self):
@@ -43,9 +44,10 @@ class Profiler:
         try:
             self.main_loop(profiling_thread_id)
         except KeyboardInterrupt:
-            self.worked_time = time.time() - self.worked_time
             return
-        self.worked_time = time.time() - self.worked_time
+        else:
+            self.worked_time = time.time() - self.worked_time
+        self.raw_data = self.prettify_stack_screens()
 
     def main_loop(self, profiling_thread_id):
         stack_search_time = 0
@@ -59,16 +61,31 @@ class Profiler:
             for thread_id, stack in sys._current_frames().items():
                 if thread_id == profiling_thread_id:
                     call_stack = []
-                    see_stack = False
                     for frame in traceback.extract_stack(stack):
                         filename = frame[0]
-                        if filename == FILENAME:
-                            see_stack = True
-                            continue
-                        if see_stack:
+                        if filename == self.globs['__file__']:
                             call_stack.append(frame)
-
                     if call_stack:
                         self.stack_screens.append(call_stack)
 
             stack_search_time = time.time() - time_start
+
+    def prettify_stack_screens(self):
+        result = []
+        time_per_screen = self.worked_time / len(self.stack_screens)
+        time_step = 1
+        for stack in self.stack_screens:
+            called_before = []
+            func = stack[len(stack) - 1]
+            for i in range(len(stack)-1):
+                frame = stack[i]
+                called_before.append((frame.name, frame.lineno))
+            f_name = os.path.basename(func.filename)
+            result.append((time_step,
+                           f_name,
+                           func.lineno,
+                           func.name,
+                           called_before,
+                           time_per_screen))
+            time_step += 1
+        return result
