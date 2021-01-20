@@ -17,9 +17,9 @@ def main():
 def new_func():
     sleep_for_2_sec()
     sleep_for_2_sec()
+    time.sleep(2)
 
 
 if __name__ == '__main__':
     main()
     new_func()
-    sleep_for_4_sec()

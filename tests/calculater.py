@@ -1,6 +1,8 @@
 import sys
 import time
 
+from tests import hello
+
 
 def add(x, y):
     time.sleep(1)
@@ -63,6 +65,7 @@ def main(args):
     subtract_array(args)
     multiply_array(args)
     divide_array(args)
+    hello.new_func()
 
 
 if __name__ == "__main__":

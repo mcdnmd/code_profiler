@@ -1,6 +1,7 @@
 import csv
 import os
 
+from modules.OutputFormatter import OutputFormatter
 from modules.Profiler import Profiler
 from modules.Statistics import ProgStatistics
 
@@ -24,44 +25,19 @@ class ProfilerCore:
 
         if self.output is not None:
             self.save_raw_data(self.Profiler.raw_data)
+            filename = os.path.join(self.workdir, f'{self.output}.csv')
+            print(f'Raw data was saved in {filename}')
             return
-        self.calculate_statistics()
 
-        if self.output is not None:
-            self.create_an_output()
+        self.calc_statistics()
+        o = OutputFormatter(self.prog_name, self.sortby)
+        o.intro()
+        o.create_output(self.prog_statistics.funcs)
 
-    def calculate_statistics(self):
-        counter = 0
-        time_per_screen = self.Profiler.worked_time / len(
-            self.Profiler.stack_screens)
-        for stack in self.Profiler.stack_screens:
-            called_from = 'func'
-            for frame in stack:
-                filename = os.path.basename(frame[0])
-                if filename == self.prog_name:
-                    line_number = frame[1]
-                    func_name = frame[2]
-                    self.prog_statistics.update_statistics(func_name,
-                                                           time_per_screen,
-                                                           counter,
-                                                           called_from)
-                    called_from = func_name
-            counter += 1
-
-        for func, statistics in self.prog_statistics.funcs.items():
-            statistics.worked_time_steps.append(statistics.step_worked_time)
-            statistics.calc_sub_metrics()
-
-    def create_an_output(self):
-        filename = os.path.join(self.workdir, f'{self.output}.csv')
-        with open(filename, 'w') as file:
-            writer = csv.writer(file)
-            writer.writerow(['func', 'amount_time', 'max', 'min', 'median'])
-            for func, statistics in self.prog_statistics.funcs.items():
-                writer.writerow([func, statistics.amount_worked_time,
-                                 statistics.worked_time_max,
-                                 statistics.worked_time_min,
-                                 statistics.worked_time_median])
+    def calc_statistics(self):
+        for raw_line in self.Profiler.raw_data:
+            self.prog_statistics.update_statistics(raw_line)
+        self.prog_statistics.final_calc()
 
     def save_raw_data(self, data):
         filename = os.path.join(self.workdir, f'{self.output}.csv')
@@ -69,6 +45,6 @@ class ProfilerCore:
             writer = csv.writer(file)
             writer.writerow(
                 ['time_step', 'filename', 'lineno', 'function', 'called_order',
-                 'time_per_step'])
+                 'time_per_step', 'args'])
             for func in data:
                 writer.writerow(func)

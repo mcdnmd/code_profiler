@@ -4,8 +4,8 @@ import unittest
 from modules.Core import ProfilerCore
 
 PATH = os.path.dirname(__file__)
-RESULT_1 = {'sleep_for_2_sec': 3, 'sleep_for_4_sec': 2, 'main': 1,
-            'new_func': 1, '<module>': 1}
+RESULT_1 = {'sleep_for_2_sec': 3, 'sleep_for_4_sec': 1, 'main': 1,
+            'new_func': 2, '<module>': 1}
 
 
 class ProfilerTestLogic(unittest.TestCase):
@@ -18,8 +18,7 @@ class ProfilerTestLogic(unittest.TestCase):
 
         statistics = core.prog_statistics.funcs
         for func in statistics.keys():
-            self.assertEqual(RESULT_1[func],
-                             len(statistics[func].worked_time_steps))
+            self.assertEqual(RESULT_1[func], statistics[func].ncalls)
 
     def test_program_with_args(self):
         args = [36, 23, 571, 74654]
