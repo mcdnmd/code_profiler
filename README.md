@@ -27,7 +27,7 @@ Version: 4.0
 * `[argv [argv ...]` указать аругументы ARGV запуска для указанного файла program (по умолчанию: None)
 
 ## Упарвление утилитой подсчета статистики
-`calc_metrics.py [-h] [-s SORTBY] file`
+```python3 calc_metrics.py [-h] [-s SORTBY] file```
 
 Для работы утилита использует параметры:
 
@@ -36,7 +36,7 @@ Version: 4.0
 
 
 ### Пример использования фильтров
-`python3 profiler.py -w ./tests/ -o prog_prof hello.py`
+```python3 profiler.py -w ./tests/ -o prog_prof hello.py```
 
 В данном примере происходит профилирование `hello.py` из папки `../code_profiler/tests/`. Результат будет сохранен в файл `../code_profiler/tests/prog_prof.csv`
 
@@ -46,7 +46,7 @@ Version: 4.0
 
 
 ## Формат вывода
-`  Ordered by: time
+```  Ordered by: time
   ncalls  tottime  percall  cumtime  percall  maxtime  mintime  medtime filename:(function) 
        2      6.0      3.0    18.01     9.01    5.982    5.982    5.982 calculater.py:(main)
        1        0      0.0    18.01    18.01        0        0        0 calculater.py:(<module>)
@@ -58,7 +58,8 @@ Version: 4.0
        3      3.0      1.0      3.0      1.0    1.001      1.0      1.0 calculater.py:(multiply)
        1      0.0      0.0      3.0      3.0        0        0        0 calculater.py:(multiply_array)
        3      3.0      1.0      3.0      1.0    1.004      1.0    1.001 calculater.py:(divide)
-`
+```
+
 * `ncalls` - кол-во вызово
 * `tottime` - время работы
 * `cumtime` - комулятивное время работы
