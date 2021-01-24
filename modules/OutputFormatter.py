@@ -6,7 +6,7 @@ class OutputFormatter:
     def intro(self):
         print(f'  Ordered by: {self.sortby}')
         header = ['ncalls', 'tottime', 'percall', 'cumtime', 'percall',
-                  'filename:(function)']
+                  'maxtime', 'mintime', 'medtime', 'filename:(function)']
 
         for column in header:
             print(f"{column: >8}", end=" ")
@@ -20,11 +20,17 @@ class OutputFormatter:
             percall1 = value.percall1
             percall2 = value.percall2
             cumtime = value.cumtime
+            maxtime = value.maxtime
+            mintime = value.mintime
+            medtime = value.medtime
             print(f"{ncalls: >8}"
                   f" {tottime: >8}"
                   f" {percall2: >8}"
                   f" {cumtime: >8}"
                   f" {percall1: >8}"
+                  f" {maxtime: >8}"
+                  f" {mintime: >8}"
+                  f" {medtime: >8}"
                   f" {self.filename}:({key})", end="\n")
 
     def sort_output(self, stats):

@@ -1,6 +1,7 @@
+import statistics
+
 class ProgStatistics:
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self):
         self.funcs = {}
 
     def update_statistics(self, func):
@@ -49,6 +50,9 @@ class FuncStatistics:
         self.percall1 = 0
         self.percall2 = 0
         self.cumtime = 0
+        self.maxtime = 0
+        self.mintime = 0
+        self.medtime = 0
         self.called_order = called_order
         self.was_called_from = set()
         self.current_period = 0
@@ -111,3 +115,7 @@ class FuncStatistics:
             self.tottime = round(self.tottime, 2)
         self.percall1 = round(self.cumtime / self.ncalls, 2)
         self.percall2 = round(self.tottime / self.ncalls, 2)
+        if len(self.worked_times) > 0:
+            self.maxtime = round(max(self.worked_times), 3)
+            self.mintime = round(min(self.worked_times), 3)
+            self.medtime = round(statistics.median(self.worked_times), 3)

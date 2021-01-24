@@ -13,10 +13,10 @@ class ProfilerTestLogic(unittest.TestCase):
         globs = {'__file__': 'hello.py', '__name__': '__main__',
                  '__package__': None, '__cached__': None, }
 
-        core = ProfilerCore(globs, [], PATH, None, None, 10)
+        core = ProfilerCore(globs, [], PATH, 'time', None, 10)
         core.start()
 
-        statistics = core.prog_statistics.funcs
+        statistics = core.calculated_stat
         for func in statistics.keys():
             self.assertEqual(RESULT_1[func], statistics[func].ncalls)
 
@@ -24,8 +24,8 @@ class ProfilerTestLogic(unittest.TestCase):
         args = [36, 23, 571, 74654]
         globs = {'__file__': 'calculater.py', '__name__': '__main__',
                  '__package__': None, '__cached__': None}
-        core = ProfilerCore(globs, args, PATH, None, None, 1)
+        core = ProfilerCore(globs, args, PATH, 'time', None, 1)
         core.start()
 
-        statistics = core.prog_statistics.funcs
+        statistics = core.calculated_stat
         self.assertEqual(10, len(statistics))

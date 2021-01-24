@@ -3,6 +3,7 @@ import os
 
 from modules.OutputFormatter import OutputFormatter
 from modules.Profiler import Profiler
+from modules.StatisticCalculator import StatisticCalculater
 from modules.Statistics import ProgStatistics
 
 
@@ -15,7 +16,8 @@ class ProfilerCore:
         self.output = output
         self.interval = interval
         self.prog_name = globs['__file__']
-        self.prog_statistics = ProgStatistics(self.prog_name)
+        self.stat_calculater = StatisticCalculater()
+        self.calculated_stat = None
 
         self.globs['__file__'] = os.path.join(self.workdir, self.prog_name)
 
@@ -29,15 +31,11 @@ class ProfilerCore:
             print(f'Raw data was saved in {filename}')
             return
 
-        self.calc_statistics()
+        self.stat_calculater.update_raw_data(self.Profiler.raw_data)
+        self.calculated_stat = self.stat_calculater.calc_statistics()
         o = OutputFormatter(self.prog_name, self.sortby)
         o.intro()
-        o.create_output(self.prog_statistics.funcs)
-
-    def calc_statistics(self):
-        for raw_line in self.Profiler.raw_data:
-            self.prog_statistics.update_statistics(raw_line)
-        self.prog_statistics.final_calc()
+        o.create_output(self.calculated_stat)
 
     def save_raw_data(self, data):
         filename = os.path.join(self.workdir, f'{self.output}.csv')
