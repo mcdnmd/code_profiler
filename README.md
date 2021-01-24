@@ -46,7 +46,8 @@ Version: 4.0
 
 
 ## Формат вывода
-```  Ordered by: time
+```  
+  Ordered by: time
   ncalls  tottime  percall  cumtime  percall  maxtime  mintime  medtime filename:(function) 
        2      6.0      3.0    18.01     9.01    5.982    5.982    5.982 calculater.py:(main)
        1        0      0.0    18.01    18.01        0        0        0 calculater.py:(<module>)
